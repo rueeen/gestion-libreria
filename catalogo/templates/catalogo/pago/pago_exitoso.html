@@ -1,0 +1,20 @@
+{% extends "catalogo/base.html" %}
+{% block content %}
+  <h1>Resultado del Pago</h1>
+
+  {% if response.status == 'AUTHORIZED' %}
+    <div class="alert alert-success">
+      <h4>Pago autorizado ✅</h4>
+      <p>Monto: ${{ response.amount }}</p>
+      <p>Orden: {{ response.buy_order }}</p>
+      <p>Código de autorización: {{ response.authorization_code }}</p>
+    </div>
+  {% else %}
+    <div class="alert alert-danger">
+      <h4>Error en el pago ❌</h4>
+      <p>Estado: {{ response.status }}</p>
+    </div>
+  {% endif %}
+
+  <a href="{% url 'libro-list' %}" class="btn btn-primary">Volver al catálogo</a>
+{% endblock %}

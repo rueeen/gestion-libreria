@@ -4,9 +4,15 @@ from django.contrib import messages
 from django.contrib.auth import login, logout
 from .forms import CustomUserCreationForm
 from .models import PerfilUsuario
+from django.views.decorators.cache import never_cache
+
 
 # Create your views here.
+@never_cache
 def loginAuth(request):
+    if request.user.is_authenticated:
+        return redirect('libro-list')
+     
     form = AuthenticationForm(request, request.POST or None)
     if request.method == 'POST':
         if form.is_valid():

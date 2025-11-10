@@ -1,30 +1,43 @@
-{% extends 'catalogo/base.html' %} {% block content %}
-  <h1>Listado libros</h1>
+{% extends 'catalogo/base.html' %}
+{% block content %}
+  <h1>Listado de Libros</h1>
 
   {% if request.user.is_authenticated and request.user.perfilusuario.rol.nombre == "Bibliotecario" %}
-  <a class="btn btn-success" href="{% url 'libro-create' %}"><i class="bi bi-floppy"></i> Crear nuevo</a>
+    <a class="btn btn-success" href="{% url 'libro-create' %}">
+      <i class="bi bi-floppy"></i> Crear nuevo
+    </a>
   {% endif %}
 
-  <div class="d-flex">
+  <div class="d-flex flex-wrap justify-content-start">
     {% for l in listado_libros %}
-      <div class="card m-2" style="width: 18rem;">
-        <img src="{{ l.portada.url }}" class="card-img-top" alt="..." />
+      <div class="card m-2 shadow-sm" style="width: 18rem;">
+        <img src="{{ l.portada.url }}" class="card-img-top" alt="Portada de {{ l.titulo }}" />
         <div class="card-body">
           <h5 class="card-title">{{ l.titulo }}</h5>
-          <p class="card-text">{{ l.descripcion }}</p>
-          <p class="card-text">AUTOR: {{ l.autor }}</p>
-          <p class="card-text">AÑO PUBLICACION: {{ l.anio_publicacion }}</p>
-          <p>CATEGORIAS:</p>
-          <ul>
+          <p class="card-text">{{ l.descripcion|truncatewords:20 }}</p>
+          <p><strong>Autor:</strong> {{ l.autor }}</p>
+          <p><strong>Año:</strong> {{ l.anio_publicacion }}</p>
+
+          <p><strong>Categorías:</strong></p>
+          <ul class="mb-3">
             {% for c in l.categoria.all %}
               <li>{{ c }}</li>
             {% endfor %}
           </ul>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+
+          {% if request.user.is_authenticated and request.user.perfilusuario.rol.nombre == "Cliente" %}
+            <a href="{% url 'agregar_al_carrito' l.id %}" class="btn btn-primary w-100">
+              <i class="bi bi-cart-plus"></i> Agregar al carrito
+            </a>
+          {% else %}
+            <button class="btn btn-secondary w-100" disabled>
+              <i class="bi bi-cart"></i> Solo clientes pueden comprar
+            </button>
+          {% endif %}
         </div>
       </div>
     {% empty %}
-      <p>No hay libros guardados</p>
+      <p>No hay libros guardados.</p>
     {% endfor %}
   </div>
 {% endblock %}

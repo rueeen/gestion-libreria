@@ -1,0 +1,7 @@
+{% extends "catalogo/base.html" %}
+{% block content %}
+  <h1>Pedido Confirmado</h1>
+  <p>Gracias, tu pedido número <strong>{{ pedido.id }}</strong> ha sido creado.</p>
+  <p>Total: <strong>{{ pedido.total }}</strong></p>
+  <a href="{% url 'libro-list' %}" class="btn btn-primary">Seguir comprando</a>
+{% endblock %}

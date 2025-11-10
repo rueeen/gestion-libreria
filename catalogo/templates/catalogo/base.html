@@ -34,6 +34,13 @@
           </ul>
           <ul class="navbar-nav">
             {% if user.is_authenticated %}
+              {% if request.user.perfilusuario.rol.nombre == "Cliente" %}
+                <li class="nav-item">
+                  <a href="{% url 'ver_carrito' %}" class="nav-link">
+                    <i class="bi bi-cart3"></i> Carrito
+                  </a>
+                </li>
+              {% endif %}
               <li class="nav-item">
                 <a href="{% url 'logout' %}" class="nav-link">Cerrar sesion</a>
               </li>

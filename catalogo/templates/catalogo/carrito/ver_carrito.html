@@ -1,0 +1,48 @@
+{% extends "catalogo/base.html" %}
+{% block content %}
+  <h1>Tu Carrito</h1>
+
+  {% if items %}
+    <table class="table align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Libro</th>
+          <th>Cantidad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ item.libro.titulo }}</td>
+          <td>
+            <div class="d-flex justify-content-center align-items-center gap-2">
+              <a href="{% url 'disminuir_item' item.id %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-dash"></i>
+              </a>
+              <span class="px-2 fw-bold">{{ item.cantidad }}</span>
+              <a href="{% url 'incrementar_item' item.id %}" class="btn btn-outline-secondary btn-sm">
+                <i class="bi bi-plus"></i>
+              </a>
+            </div>
+          </td>
+          <td>
+            <a href="{% url 'eliminar_item' item.id %}" class="btn btn-danger btn-sm">
+              <i class="bi bi-trash"></i> Eliminar
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+      <h4><strong>Total:</strong> {{ total }}</h4>
+      <a href="{% url 'iniciar_pago' %}" class="btn btn-success">
+        <i class="bi bi-credit-card"></i> Pagar con Webpay
+      </a>
+    </div>
+  {% else %}
+    <p>No hay libros en el carrito.</p>
+  {% endif %}
+{% endblock %}
