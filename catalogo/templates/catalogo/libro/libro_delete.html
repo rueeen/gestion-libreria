@@ -1,0 +1,11 @@
+{% extends 'catalogo/base.html' %} {% block content %}
+<h1>Eliminar Libros</h1>
+<form method='post'>
+    {% csrf_token %}
+
+    <p>Esta seguro que desea eliminar el libro?</p>
+
+    <button class="btn btn-danger">Eliminar</button>
+    <a class="btn btn-dark" href="{% url 'libro-list' %}">Volver</a>
+</form>
+{% endblock content %}

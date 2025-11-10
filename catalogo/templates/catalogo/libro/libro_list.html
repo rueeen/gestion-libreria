@@ -1,0 +1,30 @@
+{% extends 'catalogo/base.html' %} {% block content %}
+  <h1>Listado libros</h1>
+
+  {% if request.user.is_authenticated and request.user.perfilusuario.rol.nombre == "Bibliotecario" %}
+  <a class="btn btn-success" href="{% url 'libro-create' %}"><i class="bi bi-floppy"></i> Crear nuevo</a>
+  {% endif %}
+
+  <div class="d-flex">
+    {% for l in listado_libros %}
+      <div class="card m-2" style="width: 18rem;">
+        <img src="{{ l.portada.url }}" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <h5 class="card-title">{{ l.titulo }}</h5>
+          <p class="card-text">{{ l.descripcion }}</p>
+          <p class="card-text">AUTOR: {{ l.autor }}</p>
+          <p class="card-text">AÑO PUBLICACION: {{ l.anio_publicacion }}</p>
+          <p>CATEGORIAS:</p>
+          <ul>
+            {% for c in l.categoria.all %}
+              <li>{{ c }}</li>
+            {% endfor %}
+          </ul>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+    {% empty %}
+      <p>No hay libros guardados</p>
+    {% endfor %}
+  </div>
+{% endblock %}

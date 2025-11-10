@@ -1,0 +1,13 @@
+{% extends "catalogo/base.html" %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    
+    {% load crispy_forms_tags %}
+    {{form|crispy}}
+
+    <button class="btn btn-success">Crear</button>
+    <a class="btn btn-dark" href="#">Cancelar</a>
+</form>
+{% endblock content %}

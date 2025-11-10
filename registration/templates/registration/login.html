@@ -1,0 +1,15 @@
+{% extends "catalogo/base.html" %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+
+    {% load crispy_forms_tags %}
+    {{form|crispy}}
+
+    <button class="btn btn-success">Login</button>
+    <p>
+        Si no tiene cuenta <a class="btn btn-link" href="{% url 'registrar' %}">cree una aqui</a>
+    </p>
+</form>
+{% endblock content %}

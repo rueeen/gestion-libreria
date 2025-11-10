@@ -1,0 +1,12 @@
+{% extends 'catalogo/base.html' %} {% block content %}
+<h1>Formulario Categorias</h1>
+<form method='post'>
+    {% csrf_token %}
+
+    {% load crispy_forms_tags %}
+    {{form|crispy}}
+
+    <button class="btn btn-primary">Guardar</button>
+    <a class="btn btn-dark" href="{% url 'libro-list' %}">Volver</a>
+</form>
+{% endblock content %}

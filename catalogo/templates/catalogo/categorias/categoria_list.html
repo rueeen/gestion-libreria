@@ -1,0 +1,50 @@
+{% extends 'catalogo/base.html' %} {% block content %}
+  <h1>Listado Categorias</h1>
+
+  <a class="btn btn-success" href="{% url 'categoria-create' %}"><i class="bi bi-floppy"></i> Crear nuevo</a>
+  <table class="table" id="tablaCategorias">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripcion</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in listado_categorias %}
+        <tr>
+          <td>{{ c.id }}</td>
+          <td>{{ c.nombre }}</td>
+          <td>{{ c.descripcion }}</td>
+          <td class="d-flex">
+            <a class="btn btn-danger me-2" href="{% url 'categoria-delete' c.id %}">Eliminar</a>
+            <a class="btn btn-warning" href="{% url 'categoria-update' c.id %}">Editar</a>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td>
+            <p>No hay categorias guardadas</p>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const myTable = document.querySelector('#tablaCategorias')
+      const dataTable = new DataTable(myTable, {
+        searchable: true,
+        fixedHeight: true,
+        perPage: 5,
+        labels: {
+          placeholder: 'Buscar...',
+          perPage: '{select} registros por página',
+          noRows: 'No se encontraron categorías',
+          info: 'Mostrando {start} a {end} de {rows} categorías'
+        }
+      })
+    })
+  </script>
+{% endblock %}
