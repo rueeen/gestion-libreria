@@ -37,20 +37,19 @@
 
     <div class="d-flex flex-wrap justify-content-start">
       {% for l in listado_libros %}
-        <div class="card m-2 shadow-sm" style="width: 18rem;">
-          <img src="{{ l.portada.url }}" class="card-img-top" alt="{{ l.titulo }}">
-          <div class="card-body">
-            <h5 class="card-title">{{ l.titulo }}</h5>
-            <p class="card-text">{{ l.descripcion|truncatewords:20 }}</p>
-            <p><strong>Autor:</strong> {{ l.autor }}</p>
-            <p><strong>Año:</strong> {{ l.anio_publicacion }}</p>
+      <div class="card m-2 shadow-sm" style="width: 18rem;">
+        <img src="{{ l.portada.url }}" class="card-img-top" alt="{{ l.titulo }}">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ l.titulo }}</h5>
+          <p><strong>Autor:</strong> {{ l.autor }}</p>
+          <p><strong>Año:</strong> {{ l.anio_publicacion }}</p>
 
-            <p><strong>Categorías:</strong></p>
-            <ul class="mb-3">
-              {% for c in l.categoria.all %}
-                <li>{{ c }}</li>
-              {% endfor %}
-            </ul>
+          <div class="mt-auto">
+            <button class="btn btn-outline-primary w-100 mb-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalLibro{{ l.id }}">
+              <i class="bi bi-info-circle"></i> Ver más
+            </button>
 
             {% if request.user.is_authenticated and request.user.perfilusuario.rol.nombre == "Cliente" %}
               <a href="{% url 'agregar_al_carrito' l.id %}" class="btn btn-primary w-100">
@@ -63,9 +62,49 @@
             {% endif %}
           </div>
         </div>
-      {% empty %}
-        <p>No hay libros que coincidan con tu búsqueda o filtros.</p>
-      {% endfor %}
+      </div>
+
+      <!-- Modal con la información completa -->
+      <div class="modal fade" id="modalLibro{{ l.id }}" tabindex="-1" aria-labelledby="modalLabel{{ l.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel{{ l.id }}">{{ l.titulo }}</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-md-4 text-center">
+                  <img src="{{ l.portada.url }}" class="img-fluid rounded shadow-sm" alt="{{ l.titulo }}">
+                </div>
+                <div class="col-md-8">
+                  <p><strong>Autor:</strong> {{ l.autor }}</p>
+                  <p><strong>Año de publicación:</strong> {{ l.anio_publicacion }}</p>
+                  <p><strong>Editorial:</strong> {{ l.editorial }}</p>
+                  <p><strong>Descripción:</strong></p>
+                  <p>{{ l.descripcion|linebreaksbr }}</p>
+                  <p><strong>Categorías:</strong></p>
+                  <ul>
+                    {% for c in l.categoria.all %}
+                      <li>{{ c }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              {% if request.user.is_authenticated and request.user.perfilusuario.rol.nombre == "Cliente" %}
+                <a href="{% url 'agregar_al_carrito' l.id %}" class="btn btn-primary">
+                  <i class="bi bi-cart-plus"></i> Agregar al carrito
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
     </div>
   </section>
 </div>
