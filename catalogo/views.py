@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .forms import LibroForm, CategoriaForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+# Libreria para hacer búsquedas y filtros más avanzados en las consultas (QuerySets)
+from django.db.models import Q
 
 
 def home(request):
@@ -16,9 +18,30 @@ def home(request):
 
 @login_required
 def libro_list(request):
-    print(request.user.perfilusuario.rol)
-    listado_libros = Libro.objects.all()  # -> select * from Libro
-    return render(request, 'catalogo/libro/libro_list.html', {'listado_libros': listado_libros})
+    query = request.GET.get('q', '')
+    categorias_seleccionadas = request.GET.getlist('categoria')
+    listado_libros = Libro.objects.all()
+
+    # Buscador
+    if query:
+        listado_libros = listado_libros.filter(
+            Q(titulo__icontains=query) | Q(descripcion__icontains=query)
+        )
+
+    # Filtro múltiple de categorías
+    if categorias_seleccionadas:
+        listado_libros = listado_libros.filter(
+            categoria__id__in=categorias_seleccionadas).distinct()
+
+    categorias = Categoria.objects.all()
+
+    contexto = {
+        'listado_libros': listado_libros,
+        'categorias': categorias,
+        'query': query,
+        'categorias_seleccionadas': [int(c) for c in categorias_seleccionadas],
+    }
+    return render(request, 'catalogo/libro/libro_list.html', contexto)
 
 
 @login_required

@@ -4,7 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-transbank-sdk = "*"
+django = "*"
+pillow = "*"
+django-crispy-forms = "*"
+crispy-bootstrap5 = "*"
 
 [dev-packages]
 
