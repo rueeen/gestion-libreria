@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -143,8 +145,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# se instala con pip install transbank-sdk
-# Para modo sandbox (desarrollo)
-WEBPAY_COMMERCE_CODE = "597055555532"   # código de comercio de pruebas
-WEBPAY_API_KEY = "579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C"
-WEBPAY_ENVIRONMENT = "TEST"  # o usar Environment.Integration
+# Configuración Webpay
+WEBPAY_COMMERCE_CODE = config('WEBPAY_COMMERCE_CODE')
+WEBPAY_API_KEY = config('WEBPAY_API_KEY')
+WEBPAY_ENV = config('WEBPAY_ENV')

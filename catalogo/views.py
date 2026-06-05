@@ -1,10 +1,7 @@
-from transbank.common.options import WebpayOptions
-from transbank.common.integration_type import IntegrationType
-from transbank.webpay.webpay_plus.transaction import Transaction
 from .models import Carrito, ItemCarrito, Pedido, Libro, Categoria
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import LibroForm, CategoriaForm
-from .utils import RolNombre, solo_bibliotecario
+from .utils import RolNombre, get_webpay_transaction, solo_bibliotecario
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # Libreria para hacer búsquedas y filtros más avanzados en las consultas (QuerySets)
@@ -204,14 +201,7 @@ def iniciar_pago(request):
     return_url = request.build_absolute_uri('/carrito/pago-exitoso/')
 
     try:
-        # Configurar transacción con ambiente de integración (sandbox)
-        options = WebpayOptions(
-            commerce_code="597055555532",  # código de comercio de pruebas
-            api_key="579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-            integration_type=IntegrationType.TEST
-        )
-
-        tx = Transaction(options)
+        tx = get_webpay_transaction()
 
         response = tx.create(
             buy_order=buy_order,
@@ -236,13 +226,7 @@ def pago_exitoso(request):
         return redirect('ver_carrito')
 
     try:
-        options = WebpayOptions(
-            commerce_code="597055555532",
-            api_key="579B532A7440BB0C9079DED94D31EA1615BACEB56610332264630D42D0A36B1C",
-            integration_type=IntegrationType.TEST
-        )
-
-        tx = Transaction(options)
+        tx = get_webpay_transaction()
         response = tx.commit(token)
         status = response.get('status')
 
