@@ -27,6 +27,7 @@ class Libro(models.Model):
     creado = models.DateTimeField(auto_now_add=True)
     actualizo = models.DateTimeField(auto_now=True)
     editorial = models.CharField(max_length=100)
+    precio = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     # Imagen libro
     portada = models.ImageField(upload_to='portadas')
     # Relaciones de libro
@@ -42,10 +43,11 @@ class Carrito(models.Model):
     creado = models.DateTimeField(auto_now_add=True)
 
     def total(self):
-        total = 0
-        for item in self.itemcarrito_set.all():
-            total += item.subtotal()
-        return total
+        from django.db.models import Sum, F
+        resultado = self.itemcarrito_set.aggregate(
+            total=Sum(F('cantidad') * F('libro__precio'))
+        )
+        return resultado['total'] or 0
 
     def __str__(self):
         return f"Carrito de {self.usuario.user.username}"
@@ -57,8 +59,7 @@ class ItemCarrito(models.Model):
     cantidad = models.PositiveIntegerField(default=1)
 
     def subtotal(self):
-        # Puedes agregar un campo 'precio' en Libro si deseas cálculos reales
-        return self.cantidad * 1  # valor simbólico
+        return self.cantidad * self.libro.precio
 
     def __str__(self):
         return f"{self.cantidad} x {self.libro.titulo}"
