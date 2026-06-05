@@ -4,6 +4,7 @@ from transbank.webpay.webpay_plus.transaction import Transaction
 from .models import Carrito, ItemCarrito, Pedido, Libro, Categoria
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import LibroForm, CategoriaForm
+from .utils import RolNombre, solo_bibliotecario
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 # Libreria para hacer búsquedas y filtros más avanzados en las consultas (QuerySets)
@@ -45,10 +46,8 @@ def libro_list(request):
 
 
 @login_required
+@solo_bibliotecario
 def libro_form(request):
-    if request.user.perfilusuario.rol.nombre != "Bibliotecario":
-        return render(request, 'catalogo/error_401.html')
-
     form = LibroForm(request.POST or None, request.FILES or None)
     if request.method == "POST":
         if form.is_valid():
