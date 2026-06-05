@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from catalogo.utils import RolNombre
 
 # Create your models here.
 class Rol(models.Model):
@@ -12,7 +13,7 @@ class Rol(models.Model):
         return self.nombre
     
 def rol_default():
-    rol, created = Rol.objects.get_or_create(nombre="Cliente")
+    rol, created = Rol.objects.get_or_create(nombre=RolNombre.CLIENTE)
     return rol.id
 
 class PerfilUsuario(models.Model):
