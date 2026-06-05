@@ -156,6 +156,9 @@ def eliminar_item(request, item_id):
 
 @login_required
 def confirmar_pedido(request):
+    if request.method != 'POST':
+        return redirect('ver_carrito')
+
     perfil = request.user.perfilusuario
     carrito = get_object_or_404(Carrito, usuario=perfil)
     items = carrito.itemcarrito_set.all()
