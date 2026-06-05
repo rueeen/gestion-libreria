@@ -17,11 +17,11 @@
           <td>{{ item.libro.titulo }}</td>
           <td>
             <div class="d-flex justify-content-center align-items-center gap-2">
-              <a href="{% url 'disminuir_item' item.id %}" class="btn btn-outline-secondary btn-sm">
+              <a href="{% url 'cambiar_cantidad_item' item.id 'menos' %}" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-dash"></i>
               </a>
               <span class="px-2 fw-bold">{{ item.cantidad }}</span>
-              <a href="{% url 'incrementar_item' item.id %}" class="btn btn-outline-secondary btn-sm">
+              <a href="{% url 'cambiar_cantidad_item' item.id 'mas' %}" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-plus"></i>
               </a>
             </div>
