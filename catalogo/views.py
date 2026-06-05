@@ -38,6 +38,7 @@ def libro_list(request):
         'categorias': categorias,
         'query': query,
         'categorias_seleccionadas': [int(c) for c in categorias_seleccionadas],
+        'es_cliente': request.user.perfilusuario.rol.nombre == RolNombre.CLIENTE,
     }
     return render(request, 'catalogo/libro/libro_list.html', contexto)
 
@@ -60,7 +61,6 @@ def libro_form(request):
 @login_required
 def libro_delete(request, id):
     libro = get_object_or_404(Libro, id=id)
-    print(libro)
     if request.method == "POST":
         libro.delete()
         return redirect('libro-list')
