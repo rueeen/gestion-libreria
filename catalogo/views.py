@@ -168,23 +168,18 @@ def confirmar_pedido(request):
 
 
 @login_required
-def incrementar_item(request, item_id):
+def cambiar_cantidad_item(request, item_id, accion):
     item = get_object_or_404(ItemCarrito, id=item_id,
                              carrito__usuario=request.user.perfilusuario)
-    item.cantidad += 1
-    item.save()
-    return redirect('ver_carrito')
-
-
-@login_required
-def disminuir_item(request, item_id):
-    item = get_object_or_404(ItemCarrito, id=item_id,
-                             carrito__usuario=request.user.perfilusuario)
-    if item.cantidad > 1:
-        item.cantidad -= 1
+    if accion == 'mas':
+        item.cantidad += 1
         item.save()
-    else:
-        item.delete()  # elimina el ítem si llega a 0
+    elif accion == 'menos':
+        if item.cantidad > 1:
+            item.cantidad -= 1
+            item.save()
+        else:
+            item.delete()
     return redirect('ver_carrito')
 
 
